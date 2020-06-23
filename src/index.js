@@ -2,12 +2,23 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
-
+import {BrowserRouter} from 'react-router-dom'
 
 ReactDOM.render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>,
+  <BrowserRouter>
+    <React.StrictMode>
+      <App />
+    </React.StrictMode>
+  </BrowserRouter>,
   document.getElementById('root')
 );
 
+
+let myObj = {
+  name: 'omerson',
+  age: 28,
+  healed: true,
+  rich: 'yes'
+}
+
+console.log({...myObj, name: 'Joenas'})
