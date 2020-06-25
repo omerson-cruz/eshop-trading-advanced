@@ -14,11 +14,17 @@ ReactDOM.render(
 );
 
 
-let myObj = {
-  name: 'omerson',
-  age: 28,
-  healed: true,
-  rich: 'yes'
-}
+// let myObj = {
+//   name: 'omerson',
+//   age: 28,
+//   healed: true,
+//   rich: 'yes'
+// }
 
-console.log({...myObj, name: 'Joenas'})
+// let funct = ({rich,...spreadArg })  => {
+//   console.log('spreadArg: ',spreadArg)
+//   console.log('rich: ', rich)
+// }
+
+// funct(myObj)
+
