@@ -7,7 +7,7 @@ import ShopPage from "./pages/shop/shop.component";
 import Header from './components/header/header.component'
 import SignInPage from './pages/signin/signin.component'
 
-import { auth } from './firebase/firebase.utils'
+import { auth, createUserProfileDocument } from './firebase/firebase.utils'
 
 
 class App extends React.Component {
@@ -22,15 +22,47 @@ class App extends React.Component {
   unsubscribeFromAuth = null // function that will be assigned to so that we can loged in and logged out
 
   componentDidMount() {
-    this.unsubscribeFromAuth = auth.onAuthStateChanged(user => {
-      this.setState({currentUser: user})
+    // auth.onAuthStateChanged() receives a CB that has argv1 --> w/c is the userAuthenticated object
+    this.unsubscribeFromAuth = auth.onAuthStateChanged( async userAuth => {
+      // this.setState({currentUser: userAuth})
+      // createUserProfileDocument(userAuth)
+      // console.log('user', userAuth)
 
-      console.log('user', user)
+      // if userAuth is NOT null or if user exists
+      if(userAuth) {
+        // we will get the  documentRef object of user as implemented on firebase.utils.js
+        const userRef = await createUserProfileDocument(userAuth)
+
+        // we are using userRef to check if our databaes has updated with new data
+        //    that is very similar with "auth.onAuthStateChanged"
+        //    saying if the snapShot is changed. Though user data is really not going to be updated in the database as per our implementation
+        // What we intentded to do is actually get the snapshot of object "representing the data that is currently stored in our database "
+
+        userRef.onSnapshot(snapShot => {
+          this.setState({
+            currentUser: {
+              id: snapShot.id,
+              ...snapShot.data()
+            }
+          },  () => {
+                console.log(this.state)
+              }
+          )  // putting the console log here at the 2nd argument
+             // because we know that setState is asynchronous right?
+        })
+
+        // first let's try to log the current state of the App component
+        //    whenever we have changes on the SignUp component
+        console.log(this.state)
+
+      } else {  // if the userAuth is null
+        this.setState({currentUser: userAuth})
+      }
     })
   }
 
   componentWillUnmount() {
-    this.unsubscribeFromAuth()  // this will close or logged out the google auth
+    this.unsubscribeFromAuth()  // this will unsubscribe only but WILLNOT LOGGED OUT of our app
   }
 
   render () {
