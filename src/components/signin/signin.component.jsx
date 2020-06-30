@@ -5,7 +5,7 @@ import './signin.styles.scss'
 import FormInput from '../form-input/form-input.component'
 import CustomButton from '../custom-button/custom-button.component'
 
-import { signInWithGoogle } from '../../firebase/firebase.utils'
+import { auth, signInWithGoogle } from '../../firebase/firebase.utils'
 
 
 class SignIn extends React.Component {
@@ -18,12 +18,23 @@ class SignIn extends React.Component {
         }
     }
 
-    handleSubmit = (e) => {
+    handleSubmit = async (e) => {
         e.preventDefault()
 
-        this.setState({ email: '', password: ''})
+        // get the current value of the email and password input tags
+        const {email, password} = this.state
 
+        try {
+            await auth.signInWithEmailAndPassword(email, password)
+
+
+            // IF all that Sign IN succeeds then we need to clear the input values
+            this.setState({ email: '', password: ''})
+        } catch (error) {
+            console.log("err: ", error)
+        }
     }
+
 
     handleChange = (e) => {
         const { value, name } = e.target
@@ -71,3 +82,13 @@ class SignIn extends React.Component {
 }
 
 export default SignIn
+
+
+// const userReducer = (state, action) => {
+//     switch(action.type) {
+//         case 'SET_CURRENT_USER':
+//             return state.currentUser = action.payload
+//         default:
+//             return state
+//     }
+// }

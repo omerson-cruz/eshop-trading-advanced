@@ -9,19 +9,18 @@ import SignInPage from './pages/signin/signin.component'
 
 import { auth, createUserProfileDocument } from './firebase/firebase.utils'
 
+// redux-related imports
+import {connect } from 'react-redux'
+import { setCurrentUser } from './redux/user/user.actions'
+
 
 class App extends React.Component {
-  constructor() {
-    super()
-
-    this.state = {
-      currentUser: null
-    }
-  }
 
   unsubscribeFromAuth = null // function that will be assigned to so that we can loged in and logged out
 
   componentDidMount() {
+    const { setCurrentUser } = this.props
+
     // auth.onAuthStateChanged() receives a CB that has argv1 --> w/c is the userAuthenticated object
     this.unsubscribeFromAuth = auth.onAuthStateChanged( async userAuth => {
       // this.setState({currentUser: userAuth})
@@ -39,24 +38,20 @@ class App extends React.Component {
         // What we intentded to do is actually get the snapshot of object "representing the data that is currently stored in our database "
 
         userRef.onSnapshot(snapShot => {
-          this.setState({
-            currentUser: {
+          setCurrentUser({
               id: snapShot.id,
               ...snapShot.data()
-            }
-          },  () => {
-                console.log(this.state)
-              }
-          )  // putting the console log here at the 2nd argument
+          })  // putting the console log here at the 2nd argument
              // because we know that setState is asynchronous right?
         })
 
         // first let's try to log the current state of the App component
         //    whenever we have changes on the SignUp component
-        console.log(this.state)
+        // console.log(this.state)
 
       } else {  // if the userAuth is null
-        this.setState({currentUser: userAuth})
+        // setCurrentUser({currentUser: userAuth})
+        setCurrentUser(userAuth)
       }
     })
   }
@@ -68,7 +63,7 @@ class App extends React.Component {
   render () {
     return (
       <div>
-        <Header currentUser={this.state.currentUser}/>
+        <Header />
         <Switch>
           <Route exact path="/" component={HomePage} />
           <Route path="/shop" component={ShopPage} />
@@ -80,4 +75,16 @@ class App extends React.Component {
   }
 }
 
-export default App;
+// here we are not going to use mapStateToProps
+// we only need to set the initial currentUser state with user data from firebase
+
+const mapDispatchToProps = dispatch => ({
+  // it is the way of redux to know that whatever
+  //  object you are passing me. I'm going to pass to every reducer
+  // so our user action (setCurrentUser) is a function that gets the user and
+  // returns an action object
+  setCurrentUser: (user) => dispatch(setCurrentUser(user))
+})
+
+
+export default connect(null, mapDispatchToProps)(App);

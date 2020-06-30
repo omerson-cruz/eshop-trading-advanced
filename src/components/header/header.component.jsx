@@ -1,11 +1,14 @@
 import React from 'react'
-
+// router related import
 import { Link } from 'react-router-dom'
+// redux-related import
+import { connect } from 'react-redux'
 
 import { ReactComponent as Logo } from '../../assets/crown.svg'
 import './header.styles.scss'
 
 import { auth } from '../../firebase/firebase.utils'
+
 
 const Header = ({ currentUser }) => (
     <div className='header'>
@@ -24,9 +27,20 @@ const Header = ({ currentUser }) => (
             :
             <Link className='option' to='/signin'>SIGN IN</Link>
         }
+
+        {/* <Cart currentUser={currentUser} /> */}
         </div>
     </div>
-
 )
 
-export default Header
+// mapToStateProps is just a function that returns an object where the name of the property is the property you wanna pass in As PROP to the component
+
+// argv1 - " state of the whole root reducer" or the root reducer
+const mapStateToProps = (state) => ({
+    currentUser: state.user.currentUser
+})
+
+// connect has 2 function arguments, the 2nd one being optional
+//  it will return another function where we pass or feed in the Header component
+// argv1 - is a function that allows us to access the states (the reducers) or the root reducer to be exact.
+export default connect(mapStateToProps)(Header)
