@@ -9,8 +9,13 @@ import './header.styles.scss'
 
 import { auth } from '../../firebase/firebase.utils'
 
+// shopping icon
+import CartIcon from '../cart-icon/cart-icon.component'
+// cart dropdown
+import CartDropdown from '../cart-dropdown/cart-dropdown.component'
 
-const Header = ({ currentUser }) => (
+
+const Header = ({ currentUser, hidden }) => (
     <div className='header'>
         <Link className='logo-container' to='/'>
             <Logo className='logo'/>
@@ -29,15 +34,31 @@ const Header = ({ currentUser }) => (
         }
 
         {/* <Cart currentUser={currentUser} /> */}
+
+        <CartIcon />
         </div>
+        {/* <CartDropdown /> */}
+        {
+            !hidden && (<CartDropdown />)
+        }
+
     </div>
 )
 
 // mapToStateProps is just a function that returns an object where the name of the property is the property you wanna pass in As PROP to the component
 
 // argv1 - " state of the whole root reducer" or the root reducer
-const mapStateToProps = (state) => ({
-    currentUser: state.user.currentUser
+// const mapStateToProps = (state) => ({
+//     currentUser: state.user.currentUser
+// })
+
+// advanced destructuring of nested objects to get the "currentUser" and "hidden"
+//      from multiple reducers namely the user and cart reducer
+const mapStateToProps = ({user: { currentUser }, cart: { hidden }}) => ({
+    // currentUser : currentUser,
+    // hidden: hidden
+    currentUser,
+    hidden
 })
 
 // connect has 2 function arguments, the 2nd one being optional
