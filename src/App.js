@@ -1,5 +1,5 @@
 import React from "react";
-import { Switch, Route } from "react-router-dom";
+import { Switch, Route, Redirect } from "react-router-dom";
 
 import "./App.css";
 import HomePage from "./pages/homepage/homepage.component";
@@ -67,13 +67,27 @@ class App extends React.Component {
         <Switch>
           <Route exact path="/" component={HomePage} />
           <Route path="/shop" component={ShopPage} />
-          <Route path="/signin" component={SignInPage} />
+          <Route exact path="/signin"
+            render={() =>
+              this.props.currentUser ? (<Redirect to='/' />) : (<SignInPage />)}
+          />
 
         </Switch>
       </div>
     );
   }
 }
+
+// argv1 - " state of the whole root reducer" or the root reducer
+// const mapStateToProps = (state) => ({
+//   currentUser: state.user.currentUser
+// })
+
+// similar to the above code but we just destructure the "user" reducer here
+const mapStateToProps = ({ user}) => ({
+  currentUser: user.currentUser
+})
+
 
 // here we are not going to use mapStateToProps
 // we only need to set the initial currentUser state with user data from firebase
@@ -87,4 +101,7 @@ const mapDispatchToProps = dispatch => ({
 })
 
 
-export default connect(null, mapDispatchToProps)(App);
+// export default connect(null, mapDispatchToProps)(App);
+// instead of null on argv1 we are going to pass "mapStateToProps"
+
+export default connect(mapStateToProps, mapDispatchToProps)(App);
