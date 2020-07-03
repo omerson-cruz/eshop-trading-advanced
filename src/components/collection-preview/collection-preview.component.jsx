@@ -11,9 +11,13 @@ const CollectionPreview = ({title, items, id}) => (
             {
                 items
                     .filter((item, idx) => idx < 4 )  // this will return only items with idx less than 4
-                    .map(({id, ...otherItemProps}) => {
+
+                    // so here we are passing the Whole item
+                    .map(item => {
+
+                        // so now we passed the Whole item to "item" props
                         return (
-                            <CollectionItem key={id} {...otherItemProps} />
+                            <CollectionItem key={item.id} item={item} />
                         )
                 })
             }
