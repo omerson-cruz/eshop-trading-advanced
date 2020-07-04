@@ -5,6 +5,9 @@ import {connect} from 'react-redux'
 import CustomButton from '../custom-button/custom-button.component'
 import CartItem from '../cart-item/cart-item.component'
 
+// using cart selector
+import { selectCartItems } from '../../redux/cart/cart.selector'
+
 const Cart = ({cartItems}) => (
     <div className='cart-dropdown'>
         <div className='cart-items'>
@@ -18,10 +21,10 @@ const Cart = ({cartItems}) => (
     </div>
 )
 
-
-// const mapStateToProps = (state) => ({   ==> Let's just destructure the state
-const mapStateToProps = ({ cart: {cartItems}}) => ({
-    cartItems
+// using the cartItem selector that's why we need to pass the
+//   WHOLE STATE
+const mapStateToProps = (state) => ({
+    cartItems: selectCartItems(state)
 })
 
 
