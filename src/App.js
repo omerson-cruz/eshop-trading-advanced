@@ -6,12 +6,17 @@ import HomePage from "./pages/homepage/homepage.component";
 import ShopPage from "./pages/shop/shop.component";
 import Header from './components/header/header.component'
 import SignInPage from './pages/signin/signin.component'
+import CheckoutPage from './pages/checkout/checkout.component'
 
 import { auth, createUserProfileDocument } from './firebase/firebase.utils'
 
 // redux-related imports
 import {connect } from 'react-redux'
 import { setCurrentUser } from './redux/user/user.actions'
+
+// using reselect for memoiz selectors
+import { createStructuredSelector } from 'reselect'
+import { selectCurrentUser } from './redux/user/user.selectors'
 
 
 class App extends React.Component {
@@ -66,7 +71,11 @@ class App extends React.Component {
         <Header />
         <Switch>
           <Route exact path="/" component={HomePage} />
+          {/* the reason we are not putting "exact" for the /shop route is because
+              we will have subroutes for /shop like "/shop/hats" , "/shop/jackets", etc.
+           */}
           <Route path="/shop" component={ShopPage} />
+          <Route exact path="/checkout" component={CheckoutPage} />
           <Route exact path="/signin"
             render={() =>
               this.props.currentUser ? (<Redirect to='/' />) : (<SignInPage />)}
@@ -84,8 +93,12 @@ class App extends React.Component {
 // })
 
 // similar to the above code but we just destructure the "user" reducer here
-const mapStateToProps = ({ user}) => ({
-  currentUser: user.currentUser
+// const mapStateToProps = ({ user}) => ({
+//   currentUser: user.currentUser
+// })
+
+const mapStateToProps = createStructuredSelector ({
+  currentUser: selectCurrentUser
 })
 
 

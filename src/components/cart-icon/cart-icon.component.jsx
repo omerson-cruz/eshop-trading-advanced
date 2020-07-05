@@ -8,6 +8,7 @@ import {toggleCartHidden } from '../../redux/cart/cart.actions'
 
 // using the memoi selectors
 import {selectCartItemsCount} from '../../redux/cart/cart.selector'
+import {createStructuredSelector} from 'reselect'
 
 
 const CartIcon = ({toggleCartHidden, itemCount}) => (
@@ -24,8 +25,8 @@ const mapDispatchToProps = (dispatch) => ({
 
 // using the selector and we are passing the WHOLE state to
 // the selector
-const mapStateToProps = (state) => ({
-    itemCount: selectCartItemsCount(state)
+const mapStateToProps = createStructuredSelector({
+    itemCount: selectCartItemsCount
 })
 
 export default connect(mapStateToProps, mapDispatchToProps) (CartIcon)

@@ -13,6 +13,10 @@ import { auth } from '../../firebase/firebase.utils'
 import CartIcon from '../cart-icon/cart-icon.component'
 // cart dropdown
 import CartDropdown from '../cart-dropdown/cart-dropdown.component'
+// using selectors
+import {createStructuredSelector} from 'reselect'
+import {selectCartHidden} from '../../redux/cart/cart.selector'
+import {selectCurrentUser} from '../../redux/user/user.selectors'
 
 
 const Header = ({ currentUser, hidden }) => (
@@ -54,11 +58,17 @@ const Header = ({ currentUser, hidden }) => (
 
 // advanced destructuring of nested objects to get the "currentUser" and "hidden"
 //      from multiple reducers namely the user and cart reducer
-const mapStateToProps = ({user: { currentUser }, cart: { hidden }}) => ({
-    // currentUser : currentUser,
-    // hidden: hidden
-    currentUser,
-    hidden
+// const mapStateToProps = (state) => ({
+//     // currentUser : currentUser,
+//     // hidden: hidden
+//     currentUser: selectCurrentUser(state),
+//     hidden: selectCartHidden(state)
+// })
+
+// using "createStructuredSelector" for multiple selector
+const mapStateToProps = createStructuredSelector({
+    currentUser: selectCurrentUser,
+    hidden: selectCartHidden
 })
 
 // connect has 2 function arguments, the 2nd one being optional

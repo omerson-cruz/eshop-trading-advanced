@@ -28,8 +28,15 @@ const selectCart = state => {
 // Because we use the {createSelector} now it becomes a memoir selector
 export const selectCartItems = createSelector(
     [selectCart],
-    (cart) => cart.cartItems
+    (cart) => cart.cartItems            // returns "cartItems" from cart object
 )
+
+
+export const selectCartHidden = createSelector(
+    [selectCart],
+    cart => cart.hidden
+)
+
 
 
 /**
@@ -46,4 +53,16 @@ export const selectCartItems = createSelector(
          (accumulatedQuantity, cartItem) => {
         return accumulatedQuantity + cartItem.quantity
     }, 0) // initialValue of accumulator
+ )
+
+
+ // this selector will add All of the items in our Cart
+ // So here we are compouting "theTOtal" Cost of all ITems in the Cart
+ export const selectCartTotal = createSelector(
+     [selectCartItems],
+
+     (cartItems) => cartItems.reduce(
+        (accumulatedQuantity, cartItem) => {
+       return accumulatedQuantity + (cartItem.quantity * cartItem.price)
+   }, 0) // initialValue of accumulator
  )
