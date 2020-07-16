@@ -1,6 +1,6 @@
 import React from 'react'
 // router related import
-import { Link } from 'react-router-dom'
+// import { Link } from 'react-router-dom'
 // redux-related import
 import { connect } from 'react-redux'
 
@@ -18,35 +18,46 @@ import {createStructuredSelector} from 'reselect'
 import {selectCartHidden} from '../../redux/cart/cart.selector'
 import {selectCurrentUser} from '../../redux/user/user.selectors'
 
+// using styled CSS in JS
+import {
+    HeaderContainer,
+    LogoContainer,
+    OptionsContainer,
+    OptionDiv,
+    OptionLink
+} from './header.styles'
+
 
 const Header = ({ currentUser, hidden }) => (
-    <div className='header'>
-        <Link className='logo-container' to='/'>
+    <HeaderContainer>
+        <LogoContainer to='/'>
             <Logo className='logo'/>
-        </Link>
-        <div className='options'>
-            <Link className='option' to='/shop'>SHOP</Link>
-            <Link className='option' to='/contact'>CONTACT</Link>
+        </LogoContainer>
+        <OptionsContainer>
+            <OptionLink to='/shop'>SHOP</OptionLink>
+            <OptionLink to='/contact'>CONTACT</OptionLink>
 
         {
             currentUser ?
             (
-                <div className='option' onClick={() => auth.signOut() }>SIGN OUT</div>
+                /* removing OptionDiv instead we are using the "OptionLink as='div' " */
+                /* <OptionDiv onClick={() => auth.signOut() }>SIGN OUT</OptionDiv> */
+                <OptionLink as='div' onClick={() => auth.signOut() }>SIGN OUT</OptionLink>
             )
             :
-            <Link className='option' to='/signin'>SIGN IN</Link>
+            <OptionLink to='/signin'>SIGN IN</OptionLink>
         }
 
         {/* <Cart currentUser={currentUser} /> */}
 
         <CartIcon />
-        </div>
+        </OptionsContainer>
         {/* <CartDropdown /> */}
         {
             !hidden && (<CartDropdown />)
         }
 
-    </div>
+    </HeaderContainer>
 )
 
 // mapToStateProps is just a function that returns an object where the name of the property is the property you wanna pass in As PROP to the component
