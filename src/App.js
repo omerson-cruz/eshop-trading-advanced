@@ -43,6 +43,7 @@ class App extends React.Component {
         // What we intentded to do is actually get the snapshot of object "representing the data that is currently stored in our database "
 
         userRef.onSnapshot(snapShot => {
+          console.log('userRef on sanpShot: ', {...snapShot.data(), id: snapShot.id})
           setCurrentUser({
               id: snapShot.id,
               ...snapShot.data()
@@ -66,6 +67,9 @@ class App extends React.Component {
   }
 
   render () {
+
+    console.log('render App this.props: ', this.props)
+
     return (
       <div>
         <Header />
@@ -77,8 +81,10 @@ class App extends React.Component {
           <Route path="/shop" component={ShopPage} />
           <Route exact path="/checkout" component={CheckoutPage} />
           <Route exact path="/signin"
-            render={() =>
-              this.props.currentUser ? (<Redirect to='/' />) : (<SignInPage />)}
+            render={() =>{
+                console.log('this.props: ', this.props)
+                return this.props.currentUser ? (<Redirect to='/' />) : (<SignInPage />)
+              }}
           />
 
         </Switch>
@@ -96,6 +102,19 @@ class App extends React.Component {
 // const mapStateToProps = ({ user}) => ({
 //   currentUser: user.currentUser
 // })
+
+// const mapStateToProps = state => ({
+//   currentUser: selectCurrentUser(state)
+// })
+
+/**
+ * I put console.log below because of error I"ve encounterd with user.selector.js
+ */
+// const mapStateToProps = state => {
+//   console.log('App mapstate2props: ', selectCurrentUser(state))
+//   return { currentUser: selectCurrentUser(state) }
+// }
+
 
 const mapStateToProps = createStructuredSelector ({
   currentUser: selectCurrentUser

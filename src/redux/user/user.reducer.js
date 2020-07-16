@@ -1,7 +1,7 @@
 import { UserActionTypes } from './user.types'
 
 const INITIAL_STATE = {
-    currentUser: null,
+    currentUser: { test: 'test'},
 }
 const userReducer = (state = INITIAL_STATE, action) => {
     switch (action.type) {
@@ -10,6 +10,12 @@ const userReducer = (state = INITIAL_STATE, action) => {
                 ...state,
                 currentUser: action.payload
             }
+
+            // can also be like below. But unreadable
+            // return Object.assign({}, state, {
+            //     currentUser: action.payload
+            // })
+
             // break; // since we have return value we dont need break here
 
         default:      // it's important that we have default here because
