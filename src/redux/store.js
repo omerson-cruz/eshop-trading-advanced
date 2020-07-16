@@ -6,7 +6,16 @@ import logger from 'redux-logger'
 
 import rootReducer from './root-reducer'  // this is the combined Reducers
 
-const middlewares = [logger] // store expects middleware in Array format
+const middlewares = [] // store expects middleware in Array format
+
+// check if env is development or production
+// Create React App has the "NODE_ENV" to check your current running environment
+// is in production or development
+if (process.env.NODE_ENV === 'development') {
+    middlewares.push(logger)
+}
+
+
 
 // createStore accetps two arguments
 // argv1 - rootReducer (the whole reducers combined)
