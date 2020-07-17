@@ -18,13 +18,19 @@ import { setCurrentUser } from './redux/user/user.actions'
 import { createStructuredSelector } from 'reselect'
 import { selectCurrentUser } from './redux/user/user.selectors'
 
+// for exporting SHOP_DATA to firestore
+// import {selectCollectionsForPreview} from './redux/shop/shop.selectors'
+// import {addCollectionAndDocuments} from './firebase/firebase.utils'
+
 
 class App extends React.Component {
 
   unsubscribeFromAuth = null // function that will be assigned to so that we can loged in and logged out
 
   componentDidMount() {
-    const { setCurrentUser } = this.props
+    // remember that by default a React Class component or stateful component
+    // receives a "this.props" even if you dont explicitly declare the constructor
+    const { setCurrentUser, collectionsArray  } = this.props
 
     // auth.onAuthStateChanged() receives a CB that has argv1 --> w/c is the userAuthenticated object
     this.unsubscribeFromAuth = auth.onAuthStateChanged( async userAuth => {
@@ -58,6 +64,21 @@ class App extends React.Component {
       } else {  // if the userAuth is null
         // setCurrentUser({currentUser: userAuth})
         setCurrentUser(userAuth)
+
+
+        /**
+         * THIS PART OF THE CODE IS REMOVABLE ONLY FOR BATCH UPLOADING OF SHOP_DATA
+         */
+        // from the firebase.utils.js
+        /**
+         * argv1 - collection key
+         * argv2 - collections array
+         */
+        // addCollectionAndDocuments('collections',
+        //   // so this mapping will only return us the array of objects
+        //   // with just "title" and items inside of it
+        //   collectionsArray.map( ({title, items}) => ({title, items}) )
+        // )
       }
     })
   }
@@ -117,7 +138,8 @@ class App extends React.Component {
 
 
 const mapStateToProps = createStructuredSelector ({
-  currentUser: selectCurrentUser
+  currentUser: selectCurrentUser,
+  // collectionsArray: selectCollectionsForPreview
 })
 
 

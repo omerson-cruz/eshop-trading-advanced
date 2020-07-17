@@ -47,6 +47,79 @@ export const createUserProfileDocument = async (userAuth, additionalData ) => {
 
 }
 
+/**
+ * This is a UTIL for adding SHOP_DATA or importing data into our Firebase
+ *
+ *  We would like to call this "addCollectionAndDocuments" in our component
+ *  where it will be fired once and will have access to SHOP_DATA.
+ * Therefore the best place to put this function is in App.js file.
+ * And after we updated our data in our firestore. We wanted to remove this code
+ * we are ONLY using this at ONCE time
+ */
+
+export const addCollectionAndDocuments = async (collectionKey, objectsToAdd) => {
+    // so here we are going to create the collection using the collection key
+    const collectionRef = firestore.collection(collectionKey)
+    console.log(collectionRef)
+    // if "collectionRef" does not exist. If for example we are just starting empty
+    // then firebase will automatically add it on the firebase firestore
+
+    // using batch function to send all of our "set" request for all the Documents
+    // in the SHOP_DATA collection
+    const batch = firestore.batch()
+    objectsToAdd.forEach(obj => {
+        // what collectionRef.doc does is our App telling firebase to give
+        // us a new "reference" to an empty Document reference on this collection Reference
+        // and then randomly generate an ID for the document we are about to create
+        const newDocRef = collectionRef.doc()  //==> with doc()  empty firestore will set a random key
+        /**
+         * you can also pass a string to .doc() method
+         * that will serve as the "key" of the  document to be created
+         */
+        // const newDocRef = collectionRef.doc( obj.title )
+        batch.set(newDocRef, obj)
+    })
+
+    return await batch.commit() // this will batch call all of the New Documents that we have created
+    // what commit will return is a Promise that when commit succeeds it will come back adn resolve a
+    // void value if successful
+
+
+}
+/*   addCOllectionAndDOcuments - END   */
+
+
+/**
+ * [16-8@11:35]
+ * Utils for Converting the SHOP_DATA collections from firebase into
+ * Array of Shop data Collections
+ */
+export const convertCollectionsSnapshotToMap = (collections) => {
+    const transformedCollection = collections.docs.map( doc => {
+        const { title , items } = doc.data()
+
+        return {
+            // we use encodeURI here because routeName is gonna be used on the URL route
+            // to ensure that our browser will understand this
+            routeName: encodeURI(title.toLowerCase()),
+            id: doc.id,
+            title,
+            items
+        }
+    })
+
+    console.log(transformedCollection)
+
+    // Doing the Data Normalization from the Array of transformedCollection
+    // THis is another Array to Object Algorithm
+    return transformedCollection.reduce((accumulator, collection ) => {
+        accumulator[collection.title.toLowerCase()] = collection
+        return accumulator
+    }
+    , {})
+}
+/*  convertCollectionsSnapshotToMap - END */
+
 firebase.initializeApp(config)
 
 // for Google authentication and firestore

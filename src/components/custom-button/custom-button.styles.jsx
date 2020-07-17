@@ -46,7 +46,8 @@ const googleSignInStyles = css`
  * is the props being passed to the "custom-button.component.jsx" also
  */
 const getButtonStyles = (props) => {
-    if (props.googleSignIn) {
+    // console.log("custom-button", props)
+    if (props.isGoogleSignIn) {
         return googleSignInStyles
     }
 
