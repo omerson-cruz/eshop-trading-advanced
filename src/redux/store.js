@@ -4,9 +4,13 @@ import { createStore, applyMiddleware } from 'redux'
 import { persistStore } from 'redux-persist'
 import logger from 'redux-logger'
 
+// REdux Thunk
+import thunk from 'redux-thunk'
+
 import rootReducer from './root-reducer'  // this is the combined Reducers
 
-const middlewares = [] // store expects middleware in Array format
+// initialize middeleware with "redux-thunk"
+const middlewares = [thunk] // store expects middleware in Array format
 
 // check if env is development or production
 // Create React App has the "NODE_ENV" to check your current running environment

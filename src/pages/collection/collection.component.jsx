@@ -38,7 +38,7 @@ const CollectionPage = ({collection}) => {
  * that is the props of the component itself. We are using this in order
  * to get the "match.params.collectionId"
  *
- * Also notice that selectCollection is returning another function
+ * Also notice that selectCollection is returning another selector function
  * which in turn we are passing the "state"
  */
 const mapStateToProps = (state, ownProps) =>  ({

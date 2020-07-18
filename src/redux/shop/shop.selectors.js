@@ -25,7 +25,9 @@ export const selectCollection = collectionUrlParam =>
     createSelector(
       [selectCollections],
       collections =>
-        collections[collectionUrlParam]
+        // return null if not existing then it will render an empyt copmonent
+        // or in other words it will not be rendered
+        ( collections ? collections[collectionUrlParam] : null )
     )
 
 
@@ -41,6 +43,16 @@ export const selectCollection = collectionUrlParam =>
      //     object in an Array format
      collections => {
          // so this is conversion of "keyed" Object or Map Object into an Array
-         return Object.keys(collections).map(key => collections[key])
+         return collections ?
+            Object.keys(collections).map(key => collections[key])
+            // return an empty array if the "collections" is not yet fetched
+            // from the firebase database
+            : []
      }
+ )
+
+ // selecting our SHOP_DATA fetched using the Redux-Thunk
+ export const selectIsCollectionFetching = createSelector(
+    [selectShop],
+    shop => shop.isFetching
  )
