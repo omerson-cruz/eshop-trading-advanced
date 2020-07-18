@@ -15,7 +15,10 @@ import { connect } from 'react-redux'
 //implementing Redux-thunk
 import { fetchCollectionsStartAsync } from "../../redux/shop/shop.actions";
 import { createStructuredSelector } from 'reselect'
-import { selectIsCollectionFetching } from '../../redux/shop/shop.selectors'
+import {
+  selectIsCollectionFetching,
+  selectIsCollectionsLoaded
+} from '../../redux/shop/shop.selectors'
 
 // using our HOC Spinner
 import WithSpinner from '../../components/with-spinner/with-spinner.component'
@@ -114,8 +117,13 @@ class ShopPage extends React.Component{
   }
 
   render () {
-    const { match, isCollectionFetching } = this.props
-    // "loading" is now in Redux - Thunk implementation
+    const {
+      match,
+      isCollectionFetching,
+      selectIsCollectionsLoaded
+    } = this.props
+
+    // "loading" is now moved to Redux - Thunk implementation
     // const { loading } = this.state
 
     console.log("isCollectionFetching: ", isCollectionFetching)
@@ -129,7 +137,12 @@ class ShopPage extends React.Component{
         {/* INstead of doing "path={"/shop/:category"}" */}
         {/* with  `${match.path}/` it wil be very flexible and you can use it anywhere */}
         <Route path={`${match.path}/:collectionId`}
-          render={(props) => <CollectionPageWithSpinner isLoading={isCollectionFetching} {...props} />}
+          render={(props) =>
+          <CollectionPageWithSpinner
+          // we actually need to reverse the value hence the "!selectIsCollectionsLoaded"
+          // if Collections is already Loaded then DONT do the "isLoading"
+          isLoading={!selectIsCollectionsLoaded} {...props}
+          />}
         />
       </div>
     );
@@ -144,7 +157,8 @@ class ShopPage extends React.Component{
 // })
 
 const mapStateToProps = createStructuredSelector({
-  isCollectionFetching: selectIsCollectionFetching
+  isCollectionFetching: selectIsCollectionFetching,
+  selectIsCollectionsLoaded: selectIsCollectionsLoaded
 })
 
 const mapDispatchToProps = dispatch => ({

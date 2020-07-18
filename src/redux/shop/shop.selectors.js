@@ -56,3 +56,11 @@ export const selectCollection = collectionUrlParam =>
     [selectShop],
     shop => shop.isFetching
  )
+
+
+ export const selectIsCollectionsLoaded = createSelector(
+     [selectShop],
+     // Algorithm for "converting a value to a Boolean value using the double !!"
+     // So it will return "TRUE" or "FALSE" whether shop.collections is EMPTY object or NOT
+     shop => !!shop.collections
+ )
